@@ -53,6 +53,7 @@ import {
   ShareIcon,
   TagsIcon,
   VersionsIcon,
+  ChangeAccessPolicyIcon,
 } from "../../../../../../icons";
 import { InspectMenuIcon } from "../../../../../../icons/SidebarMenus";
 import api from "../../../../../../common/api";
@@ -71,6 +72,7 @@ import { displayFileIconName } from "./utils";
 import TagsModal from "../ObjectDetails/TagsModal";
 import InspectObject from "./InspectObject";
 import Loader from "../../../../Common/Loader/Loader";
+import AclModal from "../ObjectDetails/ACLModal";
 import {
   makeid,
   storeCallForObjectWithID,
@@ -178,6 +180,7 @@ const ObjectDetailPanel = ({
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [totalVersionsSize, setTotalVersionsSize] = useState<number>(0);
+  const [aclModalOpen, setAclModalOpen] = useState<boolean>(false);
 
   const internalPathsDecoded = decodeURLString(internalPaths) || "";
   const allPathData = internalPathsDecoded.split("/");
@@ -358,6 +361,13 @@ const ObjectDetailPanel = ({
     }
   };
 
+  const closeAclModal = (reload: boolean) => {
+    setAclModalOpen(false);
+    if (reload) {
+      dispatch(setLoadingObjectInfo(true));
+    }
+  }
+
   const loaderForContainer = (
     <div style={{ textAlign: "center", marginTop: 35 }}>
       <Loader />
@@ -489,6 +499,17 @@ const ObjectDetailPanel = ({
         ]),
       tooltip: "Display Versions for this file",
     },
+    {
+      action: () => {
+        setAclModalOpen(true);
+      },
+      label: "ACL",
+      disabled:
+        !!actualInfo.is_delete_marker ||
+        !hasPermission(objectResources, [IAM_SCOPES.S3_GET_OBJECT_ACL]),
+      icon: <ChangeAccessPolicyIcon />,
+      tooltip: "ACL this Object",
+    },
   ];
 
   const calculateLastModifyTime = (lastModified: string) => {
@@ -570,6 +591,14 @@ const ObjectDetailPanel = ({
           volumeName={bucketName}
           inspectPath={actualInfo.name}
           closeInspectModalAndRefresh={closeInspectModal}
+        />
+      )}
+      {aclModalOpen && actualInfo && (
+        <AclModal
+          open={aclModalOpen}
+          closeModalAndRefresh={closeAclModal}
+          objectName={actualInfo.name}
+          bucketName={bucketName}
         />
       )}
 

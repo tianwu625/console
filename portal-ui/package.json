@@ -42,6 +42,7 @@
     "lodash": "^4.17.21",
     "minio": "^7.0.28",
     "moment": "^2.29.2",
+    "npx": "^10.2.2",
     "react": "^17.0.2",
     "react-chartjs-2": "^2.9.0",
     "react-copy-to-clipboard": "^5.0.2",
@@ -92,7 +93,7 @@
     "prettier": "2.6.2",
     "react-app-rewire-hot-loader": "^2.0.1",
     "react-app-rewired": "^2.1.6",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "testcafe": "^1.18.6",
     "typescript": "^4.4.3"
   },

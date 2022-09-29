@@ -34,7 +34,6 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/minio/console/models"
 	"github.com/minio/console/pkg/auth/idp/oauth2"
-	"github.com/minio/console/pkg/auth/ldap"
 	"github.com/minio/console/restapi/operations"
 	authApi "github.com/minio/console/restapi/operations/auth"
 )
@@ -253,16 +252,12 @@ func getListOfEnabledFeatures(session *models.Principal) []string {
 	features := []string{}
 	logSearchURL := getLogSearchURL()
 	oidcEnabled := oauth2.IsIDPEnabled()
-	ldapEnabled := ldap.GetLDAPEnabled()
 
 	if logSearchURL != "" {
 		features = append(features, "log-search")
 	}
 	if oidcEnabled {
 		features = append(features, "oidc-idp", "external-idp")
-	}
-	if ldapEnabled {
-		features = append(features, "ldap-idp", "external-idp")
 	}
 
 	if session.Hm {

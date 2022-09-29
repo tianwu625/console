@@ -840,6 +840,74 @@ func init() {
         }
       }
     },
+    "/bucket/{bucket}/acl": {
+      "get": {
+        "tags": [
+          "Bucket"
+        ],
+        "summary": "Get Acl With Given Bucket",
+        "operationId": "GetBucketAcl",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Bucket"
+        ],
+        "summary": "Set Acl To Given Bucket",
+        "operationId": "SetAclWithBucket",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "aclstr",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBucketAclRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/buckets": {
       "get": {
         "tags": [
@@ -1542,6 +1610,86 @@ func init() {
         "responses": {
           "200": {
             "description": "A successful response."
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/buckets/{bucket_name}/objects/acl": {
+      "get": {
+        "tags": [
+          "Object"
+        ],
+        "summary": "Gets Acl of an object",
+        "operationId": "GetObjectAcl",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket_name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "prefix",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Object"
+        ],
+        "summary": "Set Acl To a Object",
+        "operationId": "SetObjectAcl",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket_name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "prefix",
+            "in": "query",
+            "required": true
+          },
+          {
+            "name": "aclstr",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putObjectAclRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "boolean"
+            }
           },
           "default": {
             "description": "Generic error response.",
@@ -3950,6 +4098,37 @@ func init() {
         "responses": {
           "204": {
             "description": "A successful response."
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/user/{name}/Detail": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get User Detail",
+        "operationId": "GetUserDetail",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userDetail"
+            }
           },
           "default": {
             "description": "Generic error response.",
@@ -5939,6 +6118,17 @@ func init() {
         }
       }
     },
+    "putBucketAclRequest": {
+      "type": "object",
+      "required": [
+        "aclstr"
+      ],
+      "properties": {
+        "aclstr": {
+          "type": "string"
+        }
+      }
+    },
     "putBucketRetentionRequest": {
       "type": "object",
       "required": [
@@ -5966,6 +6156,17 @@ func init() {
           "additionalProperties": {
             "type": "string"
           }
+        }
+      }
+    },
+    "putObjectAclRequest": {
+      "type": "object",
+      "required": [
+        "aclstr"
+      ],
+      "properties": {
+        "aclstr": {
+          "type": "string"
         }
       }
     },
@@ -6937,6 +7138,35 @@ func init() {
         }
       }
     },
+    "userDetail": {
+      "type": "object",
+      "properties": {
+        "accessKey": {
+          "type": "string"
+        },
+        "canonicalID": {
+          "type": "string"
+        },
+        "pgid": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sgids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "status": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "userServiceAccountItem": {
       "type": "object",
       "properties": {
@@ -7874,6 +8104,74 @@ func init() {
         }
       }
     },
+    "/bucket/{bucket}/acl": {
+      "get": {
+        "tags": [
+          "Bucket"
+        ],
+        "summary": "Get Acl With Given Bucket",
+        "operationId": "GetBucketAcl",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Bucket"
+        ],
+        "summary": "Set Acl To Given Bucket",
+        "operationId": "SetAclWithBucket",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "aclstr",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBucketAclRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/buckets": {
       "get": {
         "tags": [
@@ -8576,6 +8874,86 @@ func init() {
         "responses": {
           "200": {
             "description": "A successful response."
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/buckets/{bucket_name}/objects/acl": {
+      "get": {
+        "tags": [
+          "Object"
+        ],
+        "summary": "Gets Acl of an object",
+        "operationId": "GetObjectAcl",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket_name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "prefix",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Object"
+        ],
+        "summary": "Set Acl To a Object",
+        "operationId": "SetObjectAcl",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "bucket_name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "prefix",
+            "in": "query",
+            "required": true
+          },
+          {
+            "name": "aclstr",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putObjectAclRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "boolean"
+            }
           },
           "default": {
             "description": "Generic error response.",
@@ -10984,6 +11362,37 @@ func init() {
         "responses": {
           "204": {
             "description": "A successful response."
+          },
+          "default": {
+            "description": "Generic error response.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/user/{name}/Detail": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get User Detail",
+        "operationId": "GetUserDetail",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userDetail"
+            }
           },
           "default": {
             "description": "Generic error response.",
@@ -13099,6 +13508,17 @@ func init() {
         }
       }
     },
+    "putBucketAclRequest": {
+      "type": "object",
+      "required": [
+        "aclstr"
+      ],
+      "properties": {
+        "aclstr": {
+          "type": "string"
+        }
+      }
+    },
     "putBucketRetentionRequest": {
       "type": "object",
       "required": [
@@ -13126,6 +13546,17 @@ func init() {
           "additionalProperties": {
             "type": "string"
           }
+        }
+      }
+    },
+    "putObjectAclRequest": {
+      "type": "object",
+      "required": [
+        "aclstr"
+      ],
+      "properties": {
+        "aclstr": {
+          "type": "string"
         }
       }
     },
@@ -14094,6 +14525,35 @@ func init() {
         },
         "status": {
           "type": "string"
+        }
+      }
+    },
+    "userDetail": {
+      "type": "object",
+      "properties": {
+        "accessKey": {
+          "type": "string"
+        },
+        "canonicalID": {
+          "type": "string"
+        },
+        "pgid": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sgids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "status": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

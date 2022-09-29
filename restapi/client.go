@@ -56,9 +56,11 @@ type MinioClient interface {
 	listBucketsWithContext(ctx context.Context) ([]minio.BucketInfo, error)
 	makeBucketWithContext(ctx context.Context, bucketName, location string, objectLocking bool) error
 	setBucketPolicyWithContext(ctx context.Context, bucketName, policy string) error
+	setBucketAclWithContext(ctx context.Context, bucketName, acl string) error
 	removeBucket(ctx context.Context, bucketName string) error
 	getBucketNotification(ctx context.Context, bucketName string) (config notification.Configuration, err error)
 	getBucketPolicy(ctx context.Context, bucketName string) (string, error)
+	getBucketAcl(ctx context.Context, bucketName string) (string, error)
 	listObjects(ctx context.Context, bucket string, opts minio.ListObjectsOptions) <-chan minio.ObjectInfo
 	getObjectRetention(ctx context.Context, bucketName, objectName, versionID string) (mode *minio.RetentionMode, retainUntilDate *time.Time, err error)
 	getObjectLegalHold(ctx context.Context, bucketName, objectName string, opts minio.GetObjectLegalHoldOptions) (status *minio.LegalHoldStatus, err error)
@@ -80,6 +82,8 @@ type MinioClient interface {
 	GetBucketTagging(ctx context.Context, bucketName string) (*tags.Tags, error)
 	SetBucketTagging(ctx context.Context, bucketName string, tags *tags.Tags) error
 	RemoveBucketTagging(ctx context.Context, bucketName string) error
+	getObjectAcl(ctx context.Context, bucketName, objectName string) (string, error)
+	setObjectAclWithContext(ctx context.Context, bucketName, objectName, acl string) error
 }
 
 // Interface implementation
@@ -120,6 +124,16 @@ func (c minioClient) setBucketPolicyWithContext(ctx context.Context, bucketName,
 	return c.client.SetBucketPolicy(ctx, bucketName, policy)
 }
 
+// implements minio.SetBucketAclWithContext(ctx, bucketName, policy)
+func (c minioClient) setBucketAclWithContext(ctx context.Context, bucketName, acl string) error {
+	return c.client.PutBucketACLstring(ctx, bucketName, acl)
+}
+
+// implements minio.SetObjectAclWithContext(ctx, bucketName, policy)
+func (c minioClient) setObjectAclWithContext(ctx context.Context, bucketName, objectName, acl string) error {
+	return c.client.PutObjectACLstring(ctx, bucketName, objectName, acl)
+}
+
 // implements minio.RemoveBucket(bucketName)
 func (c minioClient) removeBucket(ctx context.Context, bucketName string) error {
 	return c.client.RemoveBucket(ctx, bucketName)
@@ -133,6 +147,16 @@ func (c minioClient) getBucketNotification(ctx context.Context, bucketName strin
 // implements minio.GetBucketPolicy(bucketName)
 func (c minioClient) getBucketPolicy(ctx context.Context, bucketName string) (string, error) {
 	return c.client.GetBucketPolicy(ctx, bucketName)
+}
+
+// implements minio.GetBucketAcl(bucketName)
+func (c minioClient) getBucketAcl(ctx context.Context, bucketName string) (string, error) {
+	return c.client.GetBucketACLstring(ctx, bucketName)
+}
+
+// implements minio.GetObjectAcl(bucketName, object)
+func (c minioClient) getObjectAcl(ctx context.Context, bucketName, objectName string) (string, error) {
+	return c.client.GetObjectACLstring(ctx, bucketName, objectName)
 }
 
 // implements minio.getBucketVersioning(ctx, bucketName)

@@ -24,6 +24,7 @@ import {
   AddIcon,
   IAMPoliciesIcon,
   PasswordKeyIcon,
+  InfoIcon,
   TrashIcon,
   UsersIcon,
 } from "../../../icons";
@@ -45,6 +46,7 @@ import history from "../../../history";
 import UserServiceAccountsPanel from "./UserServiceAccountsPanel";
 import ChangeUserPasswordModal from "../Account/ChangeUserPasswordModal";
 import DeleteUserModal from "./DeleteUserModal";
+import GetUserDetailInfoModal from "./UserDetailInfoModal";
 import ScreenTitle from "../Common/ScreenTitle/ScreenTitle";
 import PanelTitle from "../Common/PanelTitle/PanelTitle";
 import PageLayout from "../Common/Layout/PageLayout";
@@ -102,9 +104,15 @@ const UserDetails = ({ classes, match }: IUserDetailsProps) => {
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [hasPolicy, setHasPolicy] = useState<boolean>(false);
   const userName = decodeURLString(match.params["userName"]);
+  const [getUserDetailInfoModalOpen, setGetUserDetailInfoModalOpen] =
+    useState<boolean>(false);
 
   const changeUserPassword = () => {
     setChangeUserPasswordModalOpen(true);
+  };
+
+  const getUserDetailInfo = () => {
+    setGetUserDetailInfoModalOpen(true);
   };
 
   const deleteUser = () => {
@@ -224,6 +232,13 @@ const UserDetails = ({ classes, match }: IUserDetailsProps) => {
           closeModal={() => setChangeUserPasswordModalOpen(false)}
         />
       )}
+      {getUserDetailInfoModalOpen && (
+        <GetUserDetailInfoModal
+          open={getUserDetailInfoModalOpen}
+          userName={userName}
+          closeModal={() => setGetUserDetailInfoModalOpen(false)}
+        />
+      )}
       <PageLayout className={classes.pageContainer}>
         <Grid item xs={12}>
           <ScreenTitle
@@ -266,6 +281,14 @@ const UserDetails = ({ classes, match }: IUserDetailsProps) => {
                   text={""}
                   onClick={changeUserPassword}
                   icon={<PasswordKeyIcon />}
+                  color="primary"
+                  variant={"outlined"}
+                />
+                <RBIconButton
+                  tooltip={"User Detail Info"}
+                  text={""}
+                  onClick={getUserDetailInfo}
+                  icon={<InfoIcon />}
                   color="primary"
                   variant={"outlined"}
                 />

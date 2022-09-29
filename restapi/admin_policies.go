@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"sort"
 	"strings"
@@ -35,6 +36,7 @@ import (
 	iampolicy "github.com/minio/pkg/iam/policy"
 
 	policies "github.com/minio/console/restapi/policy"
+	"github.com/minio/minio-go/v7"
 )
 
 func registersPoliciesHandler(api *operations.ConsoleAPI) {
@@ -132,6 +134,22 @@ func registersPoliciesHandler(api *operations.ConsoleAPI) {
 			return policyApi.NewGetUserPolicyDefault(int(err.Code)).WithPayload(err)
 		}
 		return policyApi.NewGetUserPolicyOK().WithPayload(userPolicyResponse)
+	})
+	// Gets Bucket Acl
+	api.BucketGetBucketACLHandler = bucketApi.GetBucketACLHandlerFunc(func(params bucketApi.GetBucketACLParams, session *models.Principal) middleware.Responder {
+		bucketAclResponse, err := getBucketAclResponse(session, params)
+		if err != nil {
+			return bucketApi.NewGetBucketACLDefault(int(err.Code)).WithPayload(err)
+		}
+		return bucketApi.NewGetBucketACLOK().WithPayload(bucketAclResponse)
+	})
+	//Set Bucket Acl
+	api.BucketSetACLWithBucketHandler = bucketApi.SetACLWithBucketHandlerFunc(func(params bucketApi.SetACLWithBucketParams, session *models.Principal) middleware.Responder {
+		setAclResponse, err := getSetBucketAclResponse(session, params)
+		if err != nil {
+			return bucketApi.NewSetACLWithBucketDefault(int(err.Code)).WithPayload(err)
+		}
+		return bucketApi.NewSetACLWithBucketOK().WithPayload(setAclResponse)
 	})
 }
 
@@ -603,4 +621,60 @@ func parsePolicy(name string, rawPolicy *iampolicy.Policy) (*models.Policy, erro
 		Policy: string(stringPolicy),
 	}
 	return policy, nil
+}
+
+func getBucketAclResponse(session *models.Principal, params bucketApi.GetBucketACLParams)(string, *models.Error) {
+	ctx, cancel := context.WithCancel(params.HTTPRequest.Context())
+	defer cancel()
+	bucket := params.Bucket
+
+	mCLient, err := newMinioClient(session)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+	minioClient := minioClient{client: mCLient}
+	aclstring, err := minioClient.getBucketAcl(ctx, bucket)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+	//FIXME aclstring is xml string
+	//need to convert to json string
+	acld := minio.AccessControlPolicyDecode{}
+	err = xml.Unmarshal([]byte(aclstring), &acld)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+	stringacl, err := json.Marshal(&acld)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+
+	return string(stringacl), nil
+}
+
+func getSetBucketAclResponse(session *models.Principal, params bucketApi.SetACLWithBucketParams) (bool, *models.Error) {
+	ctx, cancel := context.WithCancel(params.HTTPRequest.Context())
+	defer cancel()
+	bucket := params.Bucket
+	mCLient, err := newMinioClient(session)
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+	minioClient := minioClient{client: mCLient}
+	stringacl := params.Aclstr.Aclstr
+	var acle minio.AccessControlPolicyEncode
+	err = json.Unmarshal([]byte(*stringacl), &acle)
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+	aclstring, err := xml.Marshal(&acle)
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+	err = minioClient.setBucketAclWithContext(ctx, bucket, string(aclstring))
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+
+	return true, nil
 }

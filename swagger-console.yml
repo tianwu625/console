@@ -649,6 +649,59 @@ paths:
             $ref: "#/definitions/error"
       tags:
         - Object
+         
+  /buckets/{bucket_name}/objects/acl:
+    put:
+      summary: Set Acl To a Object
+      operationId: SetObjectAcl
+      parameters:
+        - name: bucket_name
+          in: path
+          required: true
+          type: string
+        - name: prefix
+          in: query
+          required: true
+          type: string
+        - name: aclstr
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/putObjectAclRequest"
+      responses:
+        200:
+          description: A successful response.
+          schema:
+            type: boolean
+        default:
+          description: Generic error response.
+          schema:
+            $ref: "#/definitions/error"
+      tags:
+        - Object
+    get:
+      summary: Gets Acl of an object
+      operationId: GetObjectAcl
+      parameters:
+        - name: bucket_name
+          in: path
+          required: true
+          type: string
+        - name: prefix
+          in: query
+          required: true
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          schema:
+            type: string
+        default:
+          description: Generic error response.
+          schema:
+            $ref: "#/definitions/error"
+      tags:
+        - Object
 
   /buckets/{bucket_name}/tags:
     put:
@@ -1567,6 +1620,27 @@ paths:
       tags:
         - User
 
+  /user/{name}/Detail:
+    get:
+      summary: Get User Detail
+      operationId: GetUserDetail
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/userDetail"
+        default:
+          description: Generic error response.
+          schema:
+            $ref: "#/definitions/error"
+      tags:
+        - User
+
   /user/{name}/groups:
     put:
       summary: Update Groups for a user
@@ -2001,6 +2075,50 @@ paths:
           description: A successful response.
           schema:
             type: boolean
+        default:
+          description: Generic error response.
+          schema:
+            $ref: "#/definitions/error"
+      tags:
+        - Bucket
+  /bucket/{bucket}/acl:
+    put:
+      summary: Set Acl To Given Bucket
+      operationId: SetAclWithBucket
+      parameters:
+        - name: bucket
+          in: path
+          required: true
+          type: string
+        - name: aclstr
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/putBucketAclRequest"
+      responses:
+        200:
+          description: A successful response.
+          schema:
+            type: boolean
+        default:
+          description: Generic error response.
+          schema:
+            $ref: "#/definitions/error"
+      tags:
+        - Bucket
+    get:
+      summary: Get Acl With Given Bucket
+      operationId: GetBucketAcl
+      parameters:
+        - name: bucket
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          schema:
+            type: string
         default:
           description: Generic error response.
           schema:
@@ -3097,6 +3215,27 @@ definitions:
         type: string
       hasPolicy:
         type: boolean
+
+  userDetail:
+    type: object
+    properties:
+      accessKey:
+        type: string
+      status:
+        type: string
+      canonicalID:
+        type: string
+      uid:
+        type: integer
+        format: int32
+      pgid:
+        type: integer
+        format: int32
+      sgids:
+        type: array
+        items:
+          type: integer
+          format: int32
 
   listUsersResponse:
     type: object
@@ -4848,3 +4987,17 @@ definitions:
         type: array
         items:
           type: string
+  putBucketAclRequest:
+    type: object
+    required:
+      - aclstr
+    properties:
+      aclstr:
+        type: string 
+  putObjectAclRequest:
+    type: object
+    required:
+      - aclstr
+    properties:
+      aclstr:
+        type: string

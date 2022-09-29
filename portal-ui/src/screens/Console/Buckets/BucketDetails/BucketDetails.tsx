@@ -79,6 +79,10 @@ const BucketLifecyclePanel = withSuspense(
   React.lazy(() => import("./BucketLifecyclePanel"))
 );
 
+const AccessControlPanel = withSuspense(
+  React.lazy(() => import("./AccessControlPanel"))
+);
+
 const styles = (theme: Theme) =>
   createStyles({
     pageContainer: {
@@ -164,6 +168,7 @@ const BucketDetails = ({ classes, match, history }: IBucketDetailsProps) => {
     lifecycle: "/admin/lifecycle",
     access: "/admin/access",
     prefix: "/admin/prefix",
+    acl: "/admin/acl",
   };
 
   const getRoutePath = (routeKey: string) => {
@@ -319,6 +324,11 @@ const BucketDetails = ({ classes, match, history }: IBucketDetailsProps) => {
                       component={AccessRulePanel}
                     />
                     <Route
+                      exact
+                      path="/buckets/:bucketName/admin/acl"
+                      component={AccessControlPanel}
+                    />
+                    <Route
                       path="/buckets/:bucketName"
                       component={() => (
                         <Redirect to={`/buckets/${bucketName}/admin/summary`} />
@@ -401,6 +411,17 @@ const BucketDetails = ({ classes, match, history }: IBucketDetailsProps) => {
                   IAM_SCOPES.S3_GET_BUCKET_POLICY,
                 ]),
                 to: getRoutePath("prefix"),
+              },
+            }}
+            {{
+              tabConfig: {
+                label: "Access Control List",
+                value: "acl",
+                component: Link,
+                disabled: !hasPermission(bucketName, [
+                  IAM_SCOPES.S3_GET_BUCKET_ACL,
+                ]),
+                to: getRoutePath("acl"),
               },
             }}
           </VerticalTabs>

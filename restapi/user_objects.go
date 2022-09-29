@@ -30,6 +30,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"encoding/xml"
+	"encoding/json"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
@@ -165,6 +167,21 @@ func registerObjectsHandlers(api *operations.ConsoleAPI) {
 			return objectApi.NewGetObjectMetadataDefault(int(err.Code)).WithPayload(err)
 		}
 		return objectApi.NewGetObjectMetadataOK().WithPayload(resp)
+	})
+	api.ObjectGetObjectACLHandler = objectApi.GetObjectACLHandlerFunc(func(params objectApi.GetObjectACLParams, session *models.Principal) middleware.Responder {
+		resp, err := getObjectAclResponse(session, params)
+		if err != nil {
+			return objectApi.NewGetObjectACLDefault(int(err.Code)).WithPayload(err)
+		}
+		return objectApi.NewGetObjectACLOK().WithPayload(resp)
+	})
+
+	api.ObjectSetObjectACLHandler = objectApi.SetObjectACLHandlerFunc(func(params objectApi.SetObjectACLParams, session *models.Principal) middleware.Responder {
+		resp, err := getSetObjectAclResponse(session, params)
+		if err != nil {
+			return objectApi.NewSetObjectACLDefault(int(err.Code)).WithPayload(err)
+		}
+		return objectApi.NewSetObjectACLOK().WithPayload(resp)
 	})
 }
 
@@ -1197,4 +1214,72 @@ func getHost(authority string) (host string) {
 		return
 	}
 	return authority
+}
+
+func getObjectAclResponse(session *models.Principal, params objectApi.GetObjectACLParams) (string, *models.Error) {
+	ctx := params.HTTPRequest.Context()
+	mCLient, err := newMinioClient(session)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+	minioClient := minioClient{client: mCLient}
+	var prefix string
+
+	if params.Prefix != "" {
+		encodedPrefix := SanitizeEncodedPrefix(params.Prefix)
+		decodedPrefix, err := base64.StdEncoding.DecodeString(encodedPrefix)
+		if err != nil {
+			return "", ErrorWithContext(ctx, err)
+		}
+		prefix = string(decodedPrefix)
+	}
+	aclstring, err := minioClient.getObjectAcl(ctx, params.BucketName, prefix)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+	acld := minio.AccessControlPolicyDecode{}
+	err = xml.Unmarshal([]byte(aclstring), &acld)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+	stringacl, err := json.Marshal(&acld)
+	if err != nil {
+		return "", ErrorWithContext(ctx, err)
+	}
+
+	return string(stringacl), nil
+}
+func getSetObjectAclResponse(session *models.Principal, params objectApi.SetObjectACLParams)(bool, *models.Error) {
+	ctx := params.HTTPRequest.Context()
+	mCLient, err := newMinioClient(session)
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+	minioClient := minioClient{client: mCLient}
+	var prefix string
+
+	if params.Prefix != "" {
+		encodedPrefix := SanitizeEncodedPrefix(params.Prefix)
+		decodedPrefix, err := base64.StdEncoding.DecodeString(encodedPrefix)
+		if err != nil {
+			return false, ErrorWithContext(ctx, err)
+		}
+		prefix = string(decodedPrefix)
+	}
+	stringacl := params.Aclstr.Aclstr
+	var acle minio.AccessControlPolicyEncode
+	err = json.Unmarshal([]byte(*stringacl), &acle)
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+	aclstring, err := xml.Marshal(&acle)
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+	err = minioClient.setObjectAclWithContext(ctx, params.BucketName, prefix, string(aclstring))
+	if err != nil {
+		return false, ErrorWithContext(ctx, err)
+	}
+
+	return true, nil
 }

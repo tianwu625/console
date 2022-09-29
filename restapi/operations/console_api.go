@@ -207,6 +207,9 @@ func NewConsoleAPI(spec *loads.Document) *ConsoleAPI {
 		BucketEnableBucketEncryptionHandler: bucket.EnableBucketEncryptionHandlerFunc(func(params bucket.EnableBucketEncryptionParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation bucket.EnableBucketEncryption has not yet been implemented")
 		}),
+		BucketGetBucketACLHandler: bucket.GetBucketACLHandlerFunc(func(params bucket.GetBucketACLParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation bucket.GetBucketACL has not yet been implemented")
+		}),
 		BucketGetBucketEncryptionInfoHandler: bucket.GetBucketEncryptionInfoHandlerFunc(func(params bucket.GetBucketEncryptionInfoParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation bucket.GetBucketEncryptionInfo has not yet been implemented")
 		}),
@@ -234,6 +237,9 @@ func NewConsoleAPI(spec *loads.Document) *ConsoleAPI {
 		BucketGetBucketVersioningHandler: bucket.GetBucketVersioningHandlerFunc(func(params bucket.GetBucketVersioningParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation bucket.GetBucketVersioning has not yet been implemented")
 		}),
+		ObjectGetObjectACLHandler: object.GetObjectACLHandlerFunc(func(params object.GetObjectACLParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation object.GetObjectACL has not yet been implemented")
+		}),
 		ObjectGetObjectMetadataHandler: object.GetObjectMetadataHandlerFunc(func(params object.GetObjectMetadataParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation object.GetObjectMetadata has not yet been implemented")
 		}),
@@ -248,6 +254,9 @@ func NewConsoleAPI(spec *loads.Document) *ConsoleAPI {
 		}),
 		TieringGetTierHandler: tiering.GetTierHandlerFunc(func(params tiering.GetTierParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation tiering.GetTier has not yet been implemented")
+		}),
+		UserGetUserDetailHandler: user.GetUserDetailHandlerFunc(func(params user.GetUserDetailParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.GetUserDetail has not yet been implemented")
 		}),
 		UserGetUserInfoHandler: user.GetUserInfoHandlerFunc(func(params user.GetUserInfoParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.GetUserInfo has not yet been implemented")
@@ -384,6 +393,9 @@ func NewConsoleAPI(spec *loads.Document) *ConsoleAPI {
 		BucketSetAccessRuleWithBucketHandler: bucket.SetAccessRuleWithBucketHandlerFunc(func(params bucket.SetAccessRuleWithBucketParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation bucket.SetAccessRuleWithBucket has not yet been implemented")
 		}),
+		BucketSetACLWithBucketHandler: bucket.SetACLWithBucketHandlerFunc(func(params bucket.SetACLWithBucketParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation bucket.SetACLWithBucket has not yet been implemented")
+		}),
 		BucketSetBucketQuotaHandler: bucket.SetBucketQuotaHandlerFunc(func(params bucket.SetBucketQuotaParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation bucket.SetBucketQuota has not yet been implemented")
 		}),
@@ -398,6 +410,9 @@ func NewConsoleAPI(spec *loads.Document) *ConsoleAPI {
 		}),
 		BucketSetMultiBucketReplicationHandler: bucket.SetMultiBucketReplicationHandlerFunc(func(params bucket.SetMultiBucketReplicationParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation bucket.SetMultiBucketReplication has not yet been implemented")
+		}),
+		ObjectSetObjectACLHandler: object.SetObjectACLHandlerFunc(func(params object.SetObjectACLParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation object.SetObjectACL has not yet been implemented")
 		}),
 		PolicySetPolicyHandler: policy.SetPolicyHandlerFunc(func(params policy.SetPolicyParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation policy.SetPolicy has not yet been implemented")
@@ -593,6 +608,8 @@ type ConsoleAPI struct {
 	TieringEditTierCredentialsHandler tiering.EditTierCredentialsHandler
 	// BucketEnableBucketEncryptionHandler sets the operation handler for the enable bucket encryption operation
 	BucketEnableBucketEncryptionHandler bucket.EnableBucketEncryptionHandler
+	// BucketGetBucketACLHandler sets the operation handler for the get bucket Acl operation
+	BucketGetBucketACLHandler bucket.GetBucketACLHandler
 	// BucketGetBucketEncryptionInfoHandler sets the operation handler for the get bucket encryption info operation
 	BucketGetBucketEncryptionInfoHandler bucket.GetBucketEncryptionInfoHandler
 	// BucketGetBucketLifecycleHandler sets the operation handler for the get bucket lifecycle operation
@@ -611,6 +628,8 @@ type ConsoleAPI struct {
 	BucketGetBucketRewindHandler bucket.GetBucketRewindHandler
 	// BucketGetBucketVersioningHandler sets the operation handler for the get bucket versioning operation
 	BucketGetBucketVersioningHandler bucket.GetBucketVersioningHandler
+	// ObjectGetObjectACLHandler sets the operation handler for the get object Acl operation
+	ObjectGetObjectACLHandler object.GetObjectACLHandler
 	// ObjectGetObjectMetadataHandler sets the operation handler for the get object metadata operation
 	ObjectGetObjectMetadataHandler object.GetObjectMetadataHandler
 	// ServiceAccountGetServiceAccountPolicyHandler sets the operation handler for the get service account policy operation
@@ -621,6 +640,8 @@ type ConsoleAPI struct {
 	SiteReplicationGetSiteReplicationStatusHandler site_replication.GetSiteReplicationStatusHandler
 	// TieringGetTierHandler sets the operation handler for the get tier operation
 	TieringGetTierHandler tiering.GetTierHandler
+	// UserGetUserDetailHandler sets the operation handler for the get user detail operation
+	UserGetUserDetailHandler user.GetUserDetailHandler
 	// UserGetUserInfoHandler sets the operation handler for the get user info operation
 	UserGetUserInfoHandler user.GetUserInfoHandler
 	// PolicyGetUserPolicyHandler sets the operation handler for the get user policy operation
@@ -711,6 +732,8 @@ type ConsoleAPI struct {
 	AuthSessionCheckHandler auth.SessionCheckHandler
 	// BucketSetAccessRuleWithBucketHandler sets the operation handler for the set access rule with bucket operation
 	BucketSetAccessRuleWithBucketHandler bucket.SetAccessRuleWithBucketHandler
+	// BucketSetACLWithBucketHandler sets the operation handler for the set Acl with bucket operation
+	BucketSetACLWithBucketHandler bucket.SetACLWithBucketHandler
 	// BucketSetBucketQuotaHandler sets the operation handler for the set bucket quota operation
 	BucketSetBucketQuotaHandler bucket.SetBucketQuotaHandler
 	// BucketSetBucketRetentionConfigHandler sets the operation handler for the set bucket retention config operation
@@ -721,6 +744,8 @@ type ConsoleAPI struct {
 	ConfigurationSetConfigHandler configuration.SetConfigHandler
 	// BucketSetMultiBucketReplicationHandler sets the operation handler for the set multi bucket replication operation
 	BucketSetMultiBucketReplicationHandler bucket.SetMultiBucketReplicationHandler
+	// ObjectSetObjectACLHandler sets the operation handler for the set object Acl operation
+	ObjectSetObjectACLHandler object.SetObjectACLHandler
 	// PolicySetPolicyHandler sets the operation handler for the set policy operation
 	PolicySetPolicyHandler policy.SetPolicyHandler
 	// PolicySetPolicyMultipleHandler sets the operation handler for the set policy multiple operation
@@ -970,6 +995,9 @@ func (o *ConsoleAPI) Validate() error {
 	if o.BucketEnableBucketEncryptionHandler == nil {
 		unregistered = append(unregistered, "bucket.EnableBucketEncryptionHandler")
 	}
+	if o.BucketGetBucketACLHandler == nil {
+		unregistered = append(unregistered, "bucket.GetBucketACLHandler")
+	}
 	if o.BucketGetBucketEncryptionInfoHandler == nil {
 		unregistered = append(unregistered, "bucket.GetBucketEncryptionInfoHandler")
 	}
@@ -997,6 +1025,9 @@ func (o *ConsoleAPI) Validate() error {
 	if o.BucketGetBucketVersioningHandler == nil {
 		unregistered = append(unregistered, "bucket.GetBucketVersioningHandler")
 	}
+	if o.ObjectGetObjectACLHandler == nil {
+		unregistered = append(unregistered, "object.GetObjectACLHandler")
+	}
 	if o.ObjectGetObjectMetadataHandler == nil {
 		unregistered = append(unregistered, "object.GetObjectMetadataHandler")
 	}
@@ -1011,6 +1042,9 @@ func (o *ConsoleAPI) Validate() error {
 	}
 	if o.TieringGetTierHandler == nil {
 		unregistered = append(unregistered, "tiering.GetTierHandler")
+	}
+	if o.UserGetUserDetailHandler == nil {
+		unregistered = append(unregistered, "user.GetUserDetailHandler")
 	}
 	if o.UserGetUserInfoHandler == nil {
 		unregistered = append(unregistered, "user.GetUserInfoHandler")
@@ -1147,6 +1181,9 @@ func (o *ConsoleAPI) Validate() error {
 	if o.BucketSetAccessRuleWithBucketHandler == nil {
 		unregistered = append(unregistered, "bucket.SetAccessRuleWithBucketHandler")
 	}
+	if o.BucketSetACLWithBucketHandler == nil {
+		unregistered = append(unregistered, "bucket.SetACLWithBucketHandler")
+	}
 	if o.BucketSetBucketQuotaHandler == nil {
 		unregistered = append(unregistered, "bucket.SetBucketQuotaHandler")
 	}
@@ -1161,6 +1198,9 @@ func (o *ConsoleAPI) Validate() error {
 	}
 	if o.BucketSetMultiBucketReplicationHandler == nil {
 		unregistered = append(unregistered, "bucket.SetMultiBucketReplicationHandler")
+	}
+	if o.ObjectSetObjectACLHandler == nil {
+		unregistered = append(unregistered, "object.SetObjectACLHandler")
 	}
 	if o.PolicySetPolicyHandler == nil {
 		unregistered = append(unregistered, "policy.SetPolicyHandler")
@@ -1487,6 +1527,10 @@ func (o *ConsoleAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/bucket/{bucket}/acl"] = bucket.NewGetBucketACL(o.context, o.BucketGetBucketACLHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/buckets/{bucket_name}/encryption/info"] = bucket.NewGetBucketEncryptionInfo(o.context, o.BucketGetBucketEncryptionInfoHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
@@ -1523,6 +1567,10 @@ func (o *ConsoleAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/buckets/{bucket_name}/objects/acl"] = object.NewGetObjectACL(o.context, o.ObjectGetObjectACLHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/buckets/{bucket_name}/objects/metadata"] = object.NewGetObjectMetadata(o.context, o.ObjectGetObjectMetadataHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
@@ -1540,6 +1588,10 @@ func (o *ConsoleAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/admin/tiers/{type}/{name}"] = tiering.NewGetTier(o.context, o.TieringGetTierHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/user/{name}/Detail"] = user.NewGetUserDetail(o.context, o.UserGetUserDetailHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -1723,6 +1775,10 @@ func (o *ConsoleAPI) initHandlerCache() {
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
+	o.handlers["PUT"]["/bucket/{bucket}/acl"] = bucket.NewSetACLWithBucket(o.context, o.BucketSetACLWithBucketHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
 	o.handlers["PUT"]["/buckets/{name}/quota"] = bucket.NewSetBucketQuota(o.context, o.BucketSetBucketQuotaHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
@@ -1740,6 +1796,10 @@ func (o *ConsoleAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/buckets-replication"] = bucket.NewSetMultiBucketReplication(o.context, o.BucketSetMultiBucketReplicationHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/buckets/{bucket_name}/objects/acl"] = object.NewSetObjectACL(o.context, o.ObjectSetObjectACLHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}

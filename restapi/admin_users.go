@@ -35,6 +35,7 @@ import (
 	userApi "github.com/minio/console/restapi/operations/user"
 	"github.com/minio/madmin-go"
 	iampolicy "github.com/minio/pkg/iam/policy"
+	"github.com/minio/console/pkg/logger"
 )
 
 // Policy evaluated constants
@@ -127,6 +128,14 @@ func registerUsersHandlers(api *operations.ConsoleAPI) {
 			return userApi.NewCheckUserServiceAccountsDefault(int(err.Code)).WithPayload(err)
 		}
 		return userApi.NewCheckUserServiceAccountsOK().WithPayload(userSAList)
+	})
+	// Get User Detail
+	api.UserGetUserDetailHandler = userApi.GetUserDetailHandlerFunc(func(params userApi.GetUserDetailParams, session *models.Principal) middleware.Responder {
+		userDetailResponse, err := getUserDetailResponse(session, params)
+		if err != nil {
+			return userApi.NewGetUserDetailDefault(int(err.Code)).WithPayload(err)
+		}
+		return userApi.NewGetUserDetailOK().WithPayload(userDetailResponse)
 	})
 }
 
@@ -741,4 +750,52 @@ func getCheckUserSAResponse(session *models.Principal, params userApi.CheckUserS
 	}
 
 	return userAccountList, nil
+}
+
+func getUserDetail(ctx context.Context, client MinioAdmin, accessKey string) (*madmin.UserDetail, error) {
+	userDetail, err := client.getUserDetail(ctx, accessKey)
+	if err != nil {
+		return nil, err
+	}
+	return &userDetail, nil
+}
+
+func getUserDetailResponse(session *models.Principal, params userApi.GetUserDetailParams)(*models.UserDetail, *models.Error) {
+	ctx, cancel := context.WithCancel(params.HTTPRequest.Context())
+	defer cancel()
+
+	logger.Info("call get user detail for httpd")
+	mAdmin, err := NewMinioAdminClient(session)
+	if err != nil {
+		return nil, ErrorWithContext(ctx, err)
+	}
+
+	adminClient := AdminClient{Client: mAdmin}
+
+	userName, err := utils.DecodeBase64(params.Name)
+	if err != nil {
+		return nil, ErrorWithContext(ctx, err)
+	}
+
+	userd, err := getUserDetail(ctx, adminClient, userName)
+	if err != nil {
+		if madmin.ToErrorResponse(err).Code == "XMinioAdminNoSuchUser" {
+			var errorCode int32 = 404
+			errorMessage := "User doesn't exist"
+			return nil, &models.Error{Code: errorCode, Message: swag.String(errorMessage), DetailedMessage: swag.String(err.Error())}
+		}
+		return nil, ErrorWithContext(ctx, err)
+	}
+
+	logger.Info("result %v", userd)
+	userDetail := &models.UserDetail {
+		AccessKey: userName,
+		CanonicalID: userd.CanonicalID,
+		Pgid:userd.Pgid,
+		Sgids:userd.Sgids,
+		Status:string(userd.Status),
+		UID:userd.Uid,
+	}
+
+	return userDetail, nil
 }
