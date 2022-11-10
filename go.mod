@@ -166,4 +166,5 @@ require (
 replace (
 	github.com/minio/madmin-go v1.3.14 => github.com/tianwu625/madmin-go v0.1.0
 	github.com/minio/minio-go/v7 v7.0.26 => github.com/tianwu625/minio-go/v7 v7.1.0
+	github.com/minio/pkg v1.1.23 => ../pkg
 )
