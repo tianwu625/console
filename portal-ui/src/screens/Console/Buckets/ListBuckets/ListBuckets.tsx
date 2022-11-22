@@ -254,30 +254,6 @@ const ListBuckets = ({ classes, history }: IListBucketsProps) => {
             )}
 
             <RBIconButton
-              tooltip={"Set Lifecycle"}
-              onClick={() => {
-                setLifecycleModalOpen(true);
-              }}
-              text={""}
-              icon={<LifecycleConfigIcon />}
-              disabled={selectedBuckets.length === 0}
-              color={"primary"}
-              variant={"outlined"}
-            />
-
-            <RBIconButton
-              tooltip={"Set Replication"}
-              onClick={() => {
-                setReplicationModalOpen(true);
-              }}
-              text={""}
-              icon={<MultipleBucketsIcon />}
-              disabled={selectedBuckets.length === 0}
-              color={"primary"}
-              variant={"outlined"}
-            />
-
-            <RBIconButton
               tooltip={"Refresh"}
               onClick={() => {
                 setLoading(true);
@@ -344,7 +320,7 @@ const ListBuckets = ({ classes, history }: IListBucketsProps) => {
                     title={"Buckets"}
                     help={
                       <Fragment>
-                        MinIO uses buckets to organize objects. A bucket is
+                        OpenFS uses buckets to organize objects. A bucket is
                         similar to a folder or directory in a filesystem, where
                         each bucket can hold an arbitrary number of objects.
                         <SecureComponent

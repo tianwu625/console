@@ -248,89 +248,11 @@ const UserDetails = ({ classes, match }: IUserDetailsProps) => {
               </Fragment>
             }
             title={userName}
-            actions={
-              <Fragment>
-                <span className={classes.statusLabel}>User Status:</span>
-                <span className={classes.statusValue}>
-                  {enabled ? "Enabled" : "Disabled"}
-                </span>
-                <FormSwitchWrapper
-                  indicatorLabels={["Enabled", "Disabled"]}
-                  checked={enabled}
-                  value={"group_enabled"}
-                  id="group-status"
-                  name="group-status"
-                  onChange={() => {
-                    setEnabled(!enabled);
-                    saveRecord(!enabled);
-                  }}
-                  switchOnly
-                />
-
-                <RBIconButton
-                  tooltip={"Delete User"}
-                  text={""}
-                  onClick={deleteUser}
-                  icon={<TrashIcon />}
-                  color="secondary"
-                  variant={"outlined"}
-                />
-
-                <RBIconButton
-                  tooltip={"Change Password"}
-                  text={""}
-                  onClick={changeUserPassword}
-                  icon={<PasswordKeyIcon />}
-                  color="primary"
-                  variant={"outlined"}
-                />
-                <RBIconButton
-                  tooltip={"User Detail Info"}
-                  text={""}
-                  onClick={getUserDetailInfo}
-                  icon={<InfoIcon />}
-                  color="primary"
-                  variant={"outlined"}
-                />
-              </Fragment>
-            }
           />
         </Grid>
 
         <Grid item xs={12}>
           <VerticalTabs>
-            {{
-              tabConfig: {
-                label: "Groups",
-              },
-              content: (
-                <React.Fragment>
-                  <div className={classes.actionsTray}>
-                    <PanelTitle>Groups</PanelTitle>
-                    <RBIconButton
-                      tooltip={"Add to Groups"}
-                      text={"Add to Groups"}
-                      onClick={() => {
-                        setAddGroupOpen(true);
-                      }}
-                      icon={<AddIcon />}
-                      color="primary"
-                      variant={"contained"}
-                    />
-                  </div>
-                  <div className={classes.tableBlock}>
-                    <TableWrapper
-                      // itemActions={userTableActions}
-                      columns={[{ label: "Name", elementKey: "group" }]}
-                      isLoading={loading}
-                      records={currentGroups}
-                      entityName="Groups"
-                      idField="group"
-                    />
-                  </div>
-                </React.Fragment>
-              ),
-            }}
             {{
               tabConfig: {
                 label: "Service Accounts",

@@ -325,9 +325,9 @@ const BucketLifecyclePanel = ({
               iconComponent={<TiersIcon />}
               help={
                 <Fragment>
-                  MinIO Object Lifecycle Management allows creating rules for
+                  OpenFS Object Lifecycle Management allows creating rules for
                   time or date based automatic transition or expiry of objects.
-                  For object transition, MinIO automatically moves the object to
+                  For object transition, OpenFS automatically moves the object to
                   a configured remote storage tier.
                   <br />
                   <br />

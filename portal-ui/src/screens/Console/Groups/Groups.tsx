@@ -222,68 +222,6 @@ const Groups = ({ classes, history }: IGroupsProps) => {
               value={filter}
             />
           </SecureComponent>
-          <Box
-            sx={{
-              display: "flex",
-            }}
-          >
-            <SecureComponent
-              resource={CONSOLE_UI_RESOURCE}
-              scopes={[IAM_SCOPES.ADMIN_ATTACH_USER_OR_GROUP_POLICY]}
-              matchAll
-              errorProps={{ disabled: true }}
-            >
-              <RBIconButton
-                tooltip={"Select Policy"}
-                onClick={() => {
-                  setPolicyOpen(true);
-                }}
-                text={"Assign Policy"}
-                icon={<IAMPoliciesIcon />}
-                color="primary"
-                disabled={checkedGroups.length < 1}
-                variant={"outlined"}
-              />
-            </SecureComponent>
-            <SecureComponent
-              resource={CONSOLE_UI_RESOURCE}
-              scopes={[IAM_SCOPES.ADMIN_REMOVE_USER_FROM_GROUP]}
-              matchAll
-              errorProps={{ disabled: true }}
-            >
-              <RBIconButton
-                tooltip={"Delete Selected"}
-                onClick={() => {
-                  setDeleteOpen(true);
-                }}
-                text={"Delete Selected"}
-                icon={<DeleteIcon />}
-                color="secondary"
-                disabled={checkedGroups.length === 0}
-                variant={"outlined"}
-              />
-            </SecureComponent>
-            <SecureComponent
-              resource={CONSOLE_UI_RESOURCE}
-              scopes={[
-                IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP,
-                IAM_SCOPES.ADMIN_LIST_USERS,
-              ]}
-              matchAll
-              errorProps={{ disabled: true }}
-            >
-              <RBIconButton
-                tooltip={"Create Group"}
-                text={"Create Group"}
-                variant="contained"
-                color="primary"
-                icon={<AddIcon />}
-                onClick={() => {
-                  history.push(`${IAM_PAGES.GROUPS_ADD}`);
-                }}
-              />
-            </SecureComponent>
-          </Box>
         </Grid>
         {loading && <LinearProgress />}
         {!loading && (
@@ -300,7 +238,7 @@ const Groups = ({ classes, history }: IGroupsProps) => {
                       itemActions={tableActions}
                       columns={[{ label: "Name", elementKey: "" }]}
                       isLoading={loading}
-                      selectedItems={checkedGroups}
+                      //selectedItems={checkedGroups}
                       onSelect={deleteGroup ? selectionChanged : undefined}
                       records={filteredRecords}
                       entityName="Groups"
@@ -308,75 +246,7 @@ const Groups = ({ classes, history }: IGroupsProps) => {
                     />
                   </SecureComponent>
                 </Grid>
-                <Grid item xs={12} marginTop={"25px"}>
-                  <HelpBox
-                    title={"Groups"}
-                    iconComponent={<GroupsIcon />}
-                    help={
-                      <Fragment>
-                        A group can have one attached IAM policy, where all
-                        users with membership in that group inherit that policy.
-                        Groups support more simplified management of user
-                        permissions on the MinIO Tenant.
-                        <br />
-                        <br />
-                        You can learn more at our{" "}
-                        <a
-                          href="https://docs.min.io/minio/k8s/tutorials/group-management.html?ref=con"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          documentation
-                        </a>
-                        .
-                      </Fragment>
-                    }
-                  />
-                </Grid>
               </Fragment>
-            )}
-            {records.length === 0 && (
-              <Grid
-                container
-                justifyContent={"center"}
-                alignContent={"center"}
-                alignItems={"center"}
-              >
-                <Grid item xs={8}>
-                  <HelpBox
-                    title={"Groups"}
-                    iconComponent={<UsersIcon />}
-                    help={
-                      <Fragment>
-                        A group can have one attached IAM policy, where all
-                        users with membership in that group inherit that policy.
-                        Groups support more simplified management of user
-                        permissions on the MinIO Tenant.
-                        <SecureComponent
-                          resource={CONSOLE_UI_RESOURCE}
-                          scopes={[
-                            IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP,
-                            IAM_SCOPES.ADMIN_LIST_USERS,
-                          ]}
-                          matchAll
-                        >
-                          <br />
-                          <br />
-                          To get started,{" "}
-                          <AButton
-                            onClick={() => {
-                              history.push(`${IAM_PAGES.GROUPS_ADD}`);
-                            }}
-                          >
-                            Create a Group
-                          </AButton>
-                          .
-                        </SecureComponent>
-                      </Fragment>
-                    }
-                  />
-                </Grid>
-              </Grid>
             )}
           </Fragment>
         )}

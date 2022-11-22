@@ -1229,20 +1229,13 @@ const ListObjects = ({ match, history }: IListObjectsProps) => {
       tooltip: "Share Selected File",
     },
     {
-      action: openPreview,
-      label: "Preview",
-      disabled: selectedObjects.length !== 1 || !canPreviewFile,
-      icon: <PreviewIcon />,
-      tooltip: "Preview Selected File",
-    },
-    {
       action: () => {
         setDeleteMultipleOpen(true);
       },
       label: "Delete",
       icon: <DeleteIcon />,
       disabled:
-        !hasPermission(bucketName, [IAM_SCOPES.S3_DELETE_OBJECT]) ||
+        //!hasPermission(bucketName, [IAM_SCOPES.S3_DELETE_OBJECT]) ||
         selectedObjects.length === 0 ||
         !displayDeleteObject,
       tooltip: "Delete Selected Files",
@@ -1304,10 +1297,6 @@ const ListObjects = ({ match, history }: IListObjectsProps) => {
                     Created:&nbsp;&nbsp;&nbsp;
                     <strong>{bucketInfo?.creation_date || ""}</strong>
                   </span>
-                  <span className={classes.detailsSpacer}>
-                    Access:&nbsp;&nbsp;&nbsp;
-                    <strong>{bucketInfo?.access || ""}</strong>
-                  </span>
                   {bucketInfo && (
                     <Fragment>
                       <span className={classes.detailsSpacer}>
@@ -1335,39 +1324,6 @@ const ListObjects = ({ match, history }: IListObjectsProps) => {
             actions={
               <Fragment>
                 <div className={classes.actionsSection}>
-                  <RBIconButton
-                    id={"rewind-objects-list"}
-                    tooltip={"Rewind Bucket"}
-                    text={"Rewind"}
-                    icon={
-                      <Badge
-                        badgeContent=" "
-                        color="secondary"
-                        variant="dot"
-                        invisible={!rewindEnabled}
-                        className={classes.badgeOverlap}
-                        sx={{ height: 16 }}
-                      >
-                        <HistoryIcon
-                          style={{
-                            minWidth: 16,
-                            minHeight: 16,
-                            width: 16,
-                            height: 16,
-                          }}
-                        />
-                      </Badge>
-                    }
-                    color="primary"
-                    variant={"outlined"}
-                    onClick={() => {
-                      setRewindSelect(true);
-                    }}
-                    disabled={
-                      !isVersioned ||
-                      !hasPermission(bucketName, [IAM_SCOPES.S3_PUT_OBJECT])
-                    }
-                  />
                   <RBIconButton
                     id={"refresh-objects-list"}
                     tooltip={"Reload List"}

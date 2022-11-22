@@ -418,18 +418,6 @@ const ObjectDetailPanel = ({
     },
     {
       action: () => {
-        setPreviewOpen(true);
-      },
-      label: "Preview",
-      disabled:
-        !!actualInfo.is_delete_marker ||
-        extensionPreview(currentItem) === "none" ||
-        !hasPermission(objectResources, [IAM_SCOPES.S3_GET_OBJECT]),
-      icon: <PreviewIcon />,
-      tooltip: "Preview this File",
-    },
-    {
-      action: () => {
         setLegalholdOpen(true);
       },
       label: "Legal Hold",

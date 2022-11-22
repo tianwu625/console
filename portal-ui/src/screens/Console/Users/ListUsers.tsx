@@ -207,65 +207,6 @@ const ListUsers = ({ classes, history }: IUsersProps) => {
             overrideClass={classes.searchField}
             value={filter}
           />
-          <SecureComponent
-            resource={CONSOLE_UI_RESOURCE}
-            scopes={[IAM_SCOPES.ADMIN_DELETE_USER]}
-            matchAll
-            errorProps={{ disabled: true }}
-          >
-            <RBIconButton
-              tooltip={"Delete Selected"}
-              onClick={() => {
-                setDeleteOpen(true);
-              }}
-              text={"Delete Selected"}
-              icon={<DeleteIcon />}
-              color="secondary"
-              disabled={checkedUsers.length === 0}
-              variant={"outlined"}
-              aria-label="delete-selected-users"
-            />
-          </SecureComponent>
-          <SecureComponent
-            scopes={[IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP]}
-            resource={CONSOLE_UI_RESOURCE}
-            errorProps={{ disabled: true }}
-          >
-            <RBIconButton
-              tooltip={"Add to Group"}
-              text={"Add to Group"}
-              icon={<GroupsIcon />}
-              color="primary"
-              disabled={checkedUsers.length <= 0}
-              onClick={() => {
-                if (checkedUsers.length > 0) {
-                  setAddGroupOpen(true);
-                }
-              }}
-              variant={"outlined"}
-            />
-          </SecureComponent>
-          <SecureComponent
-            scopes={[
-              IAM_SCOPES.ADMIN_CREATE_USER,
-              IAM_SCOPES.ADMIN_LIST_USER_POLICIES,
-              IAM_SCOPES.ADMIN_LIST_GROUPS,
-            ]}
-            resource={S3_ALL_RESOURCES}
-            matchAll
-            errorProps={{ disabled: true }}
-          >
-            <RBIconButton
-              tooltip={"Create User"}
-              text={"Create User"}
-              icon={<AddIcon />}
-              color="primary"
-              onClick={() => {
-                history.push(`${IAM_PAGES.USER_ADD}`);
-              }}
-              variant={"contained"}
-            />
-          </SecureComponent>
         </Grid>
 
         {loading && <LinearProgress />}
@@ -294,7 +235,7 @@ const ListUsers = ({ classes, history }: IUsersProps) => {
                           ? selectionChanged
                           : undefined
                       }
-                      selectedItems={checkedUsers}
+                     //selectedItems={checkedUsers}
                       isLoading={loading}
                       records={filteredRecords}
                       entityName="Users"
@@ -302,49 +243,6 @@ const ListUsers = ({ classes, history }: IUsersProps) => {
                     />
                   </SecureComponent>
                 </Grid>
-                <HelpBox
-                  title={"Users"}
-                  iconComponent={<UsersIcon />}
-                  help={
-                    <Fragment>
-                      A MinIO user consists of a unique access key (username)
-                      and corresponding secret key (password). Clients must
-                      authenticate their identity by specifying both a valid
-                      access key (username) and the corresponding secret key
-                      (password) of an existing MinIO user.
-                      <br />
-                      Groups provide a simplified method for managing shared
-                      permissions among users with common access patterns and
-                      workloads.
-                      <br />
-                      <br />
-                      Users inherit access permissions to data and resources
-                      through the groups they belong to.
-                      <br />
-                      MinIO uses Policy-Based Access Control (PBAC) to define
-                      the authorized actions and resources to which an
-                      authenticated user has access. Each policy describes one
-                      or more actions and conditions that outline the
-                      permissions of a user or group of users.
-                      <br />
-                      <br />
-                      Each user can access only those resources and operations
-                      which are explicitly granted by the built-in role. MinIO
-                      denies access to any other resource or action by default.
-                      <br />
-                      <br />
-                      You can learn more at our{" "}
-                      <a
-                        href="https://docs.min.io/minio/k8s/tutorials/user-management.html?ref=con"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        documentation
-                      </a>
-                      .
-                    </Fragment>
-                  }
-                />
               </Fragment>
             )}
             {records.length === 0 && (
@@ -355,60 +253,6 @@ const ListUsers = ({ classes, history }: IUsersProps) => {
                 alignItems={"start"}
               >
                 <Grid item xs={8}>
-                  <HelpBox
-                    title={"Users"}
-                    iconComponent={<UsersIcon />}
-                    help={
-                      <Fragment>
-                        A MinIO user consists of a unique access key (username)
-                        and corresponding secret key (password). Clients must
-                        authenticate their identity by specifying both a valid
-                        access key (username) and the corresponding secret key
-                        (password) of an existing MinIO user.
-                        <br />
-                        Groups provide a simplified method for managing shared
-                        permissions among users with common access patterns and
-                        workloads.
-                        <br />
-                        <br />
-                        Users inherit access permissions to data and resources
-                        through the groups they belong to.
-                        <br />
-                        MinIO uses Policy-Based Access Control (PBAC) to define
-                        the authorized actions and resources to which an
-                        authenticated user has access. Each policy describes one
-                        or more actions and conditions that outline the
-                        permissions of a user or group of users.
-                        <br />
-                        <br />
-                        Each user can access only those resources and operations
-                        which are explicitly granted by the built-in role. MinIO
-                        denies access to any other resource or action by
-                        default.
-                        <SecureComponent
-                          scopes={[
-                            IAM_SCOPES.ADMIN_CREATE_USER,
-                            IAM_SCOPES.ADMIN_LIST_USER_POLICIES,
-                            IAM_SCOPES.ADMIN_LIST_GROUPS,
-                          ]}
-                          matchAll
-                          resource={CONSOLE_UI_RESOURCE}
-                        >
-                          <br />
-                          <br />
-                          To get started,{" "}
-                          <AButton
-                            onClick={() => {
-                              history.push(`${IAM_PAGES.USER_ADD}`);
-                            }}
-                          >
-                            Create a User
-                          </AButton>
-                          .
-                        </SecureComponent>
-                      </Fragment>
-                    }
-                  />
                 </Grid>
               </Grid>
             )}

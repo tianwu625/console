@@ -69,7 +69,13 @@ const MenuToggle = ({ isOpen, isOperatorMode, onToggle }: MenuToggleProps) => {
     >
       {isOpen ? (
         <div className={`logo ${stateClsName}`}>
-          {isOperatorMode ? <OperatorLogo /> : <ConsoleLogo />}
+            <Box
+              style={{
+                font: "normal normal normal 20px/24px Lato",color:"white", textAlign:"center",
+              }}
+            >
+              OpenFS Explorer
+            </Box>
         </div>
       ) : (
         <div className={`logo ${stateClsName}`}>

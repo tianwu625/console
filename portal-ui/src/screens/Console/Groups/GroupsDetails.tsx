@@ -134,7 +134,7 @@ const GroupsDetails = ({ classes, match }: IGroupDetailsProps) => {
 
   const groupPolicies = formatPolicy(policy);
   const isGroupEnabled = groupEnabled === "enabled";
-  const memberActionText = members.length > 0 ? "Edit Members" : "Add Members";
+  //const memberActionText = members.length > 0 ? "Edit Members" : "Add Members";
 
   const getGroupDetails = hasPermission(CONSOLE_UI_RESOURCE, [
     IAM_SCOPES.ADMIN_GET_GROUP,
@@ -181,22 +181,6 @@ const GroupsDetails = ({ classes, match }: IGroupDetailsProps) => {
           overrideClass={classes.searchField}
           value={memberFilter}
         />
-        <SecureComponent
-          resource={CONSOLE_UI_RESOURCE}
-          scopes={[IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP]}
-          errorProps={{ disabled: true }}
-        >
-          <RBIconButton
-            tooltip={memberActionText}
-            text={memberActionText}
-            variant="contained"
-            color="primary"
-            icon={<AddIcon />}
-            onClick={() => {
-              setUsersOpen(true);
-            }}
-          />
-        </SecureComponent>
       </div>
 
       <div className={classes.tableBlock}>
@@ -279,66 +263,18 @@ const GroupsDetails = ({ classes, match }: IGroupDetailsProps) => {
             }
             title={groupName}
             subTitle={null}
-            actions={
-              <Fragment>
-                <span className={classes.statusLabel}>Group Status:</span>
-                <span id="group-status" className={classes.statusValue}>
-                  {isGroupEnabled ? "Enabled" : "Disabled"}
-                </span>
-                <SecureComponent
-                  resource={CONSOLE_UI_RESOURCE}
-                  scopes={[
-                    IAM_SCOPES.ADMIN_ENABLE_GROUP,
-                    IAM_SCOPES.ADMIN_DISABLE_GROUP,
-                  ]}
-                  errorProps={{ disabled: true }}
-                  matchAll
-                >
-                  <FormSwitchWrapper
-                    indicatorLabels={["Enabled", "Disabled"]}
-                    checked={isGroupEnabled}
-                    value={"group_enabled"}
-                    id="group-status"
-                    name="group-status"
-                    onChange={() => {
-                      toggleGroupStatus(!isGroupEnabled);
-                    }}
-                    switchOnly
-                  />
-                </SecureComponent>
-
-                <SecureComponent
-                  resource={CONSOLE_UI_RESOURCE}
-                  scopes={[IAM_SCOPES.ADMIN_REMOVE_USER_FROM_GROUP]}
-                  errorProps={{ disabled: true }}
-                >
-                  <div className={classes.spacerLeft}>
-                    <RBIconButton
-                      tooltip={`Delete Group`}
-                      text={``}
-                      variant="outlined"
-                      color="secondary"
-                      icon={<TrashIcon />}
-                      onClick={() => {
-                        setDeleteOpen(true);
-                      }}
-                    />
-                  </div>
-                </SecureComponent>
-              </Fragment>
-            }
           />
         </Grid>
 
         <Grid item xs={12}>
           <VerticalTabs>
             {{
-              tabConfig: { label: "Members" },
-              content: groupsTabContent,
-            }}
-            {{
               tabConfig: { label: "Policies" },
               content: policiesTabContent,
+            }}
+            {{
+              tabConfig: { label: "Members" },
+              content: groupsTabContent,
             }}
           </VerticalTabs>
         </Grid>
@@ -356,20 +292,6 @@ const GroupsDetails = ({ classes, match }: IGroupDetailsProps) => {
         />
       ) : null}
 
-      {usersOpen ? (
-        <AddGroupMember
-          selectedGroup={groupName}
-          onSaveClick={() => {}}
-          title={memberActionText}
-          groupStatus={groupEnabled}
-          preSelectedUsers={members}
-          open={usersOpen}
-          onClose={() => {
-            setUsersOpen(false);
-            fetchGroupInfo();
-          }}
-        />
-      ) : null}
 
       {deleteOpen && (
         <DeleteGroup

@@ -343,7 +343,7 @@ const BucketReplicationPanel = ({
             iconComponent={<BucketsIcon />}
             help={
               <Fragment>
-                MinIO supports server-side and client-side replication of
+                OpenFS supports server-side and client-side replication of
                 objects between source and destination buckets.
                 <br />
                 <br />

@@ -153,7 +153,7 @@ const PageHeader = ({
       >
         {!sidebarOpen && (
           <div className={classes.logo}>
-            {operatorMode ? <OperatorLogo /> : <ConsoleLogo />}
+              OpenFS Explorer
           </div>
         )}
         <Box
@@ -166,6 +166,17 @@ const PageHeader = ({
           }}
         >
           {label}
+        </Box>
+        <Box
+          sx={{
+            color: "#000",
+            fontSize: 15,
+            fontWeight: 500,
+            marginLeft: "21px",
+            display: "flex",
+          }}
+        >
+          Signed in as: {localStorage.getItem("userLoggedIn")}
         </Box>
       </Grid>
       {middleComponent && (

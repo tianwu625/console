@@ -284,25 +284,9 @@ const AddBucket = ({ classes }: IAddBucketProps) => {
               title={"Buckets"}
               help={
                 <Fragment>
-                  MinIO uses buckets to organize objects. A bucket is similar to
+                  OpenFS uses buckets to organize objects. A bucket is similar to
                   a folder or directory in a filesystem, where each bucket can
                   hold an arbitrary number of objects.
-                  <br />
-                  <br />
-                  <b>Versioning</b> allows to keep multiple versions of the same
-                  object under the same key.
-                  <br />
-                  <br />
-                  <b>Object Locking</b> prevents objects from being deleted.
-                  Required to support retention and legal hold. Can only be
-                  enabled at bucket creation.
-                  <br />
-                  <br />
-                  <b>Quota</b> limits the amount of data in the bucket.
-                  <br />
-                  <br />
-                  <b>Retention</b> imposes rules to prevent object deletion for
-                  a period of time.
                 </Fragment>
               }
             />
@@ -328,88 +312,7 @@ const AddBucket = ({ classes }: IAddBucketProps) => {
                   value={bucketName}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <SectionTitle>Features</SectionTitle>
-                {!distributedSetup && (
-                  <Fragment>
-                    <div className={classes.error}>
-                      These features are unavailable in a single-disk setup.
-                      <br />
-                      Please deploy a server in{" "}
-                      <a
-                        href="https://docs.min.io/minio/baremetal/installation/deploy-minio-distributed.html?ref=con"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Distributed Mode
-                      </a>{" "}
-                      to use these features.
-                    </div>
-                    <br />
-                    <br />
-                  </Fragment>
-                )}
-              </Grid>
 
-              <Grid item xs={12}>
-                {siteReplicationInfo.enabled && (
-                  <Fragment>
-                    <br />
-                    <div className={classes.alertVersioning}>
-                      <InfoIcon /> Versioning setting cannot be changed as
-                      cluster replication is enabled for this site.
-                    </div>
-                    <br />
-                  </Fragment>
-                )}
-                <FormSwitchWrapper
-                  value="versioned"
-                  id="versioned"
-                  name="versioned"
-                  checked={versioningEnabled}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    dispatch(addBucketVersioning(event.target.checked));
-                  }}
-                  label={"Versioning"}
-                  disabled={
-                    !distributedSetup ||
-                    lockingEnabled ||
-                    siteReplicationInfo.enabled
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormSwitchWrapper
-                  value="locking"
-                  id="locking"
-                  name="locking"
-                  disabled={lockingFieldDisabled || !distributedSetup}
-                  checked={lockingEnabled}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    dispatch(
-                      addBucketEnableObjectLocking(event.target.checked)
-                    );
-                    if (event.target.checked && !siteReplicationInfo.enabled) {
-                      dispatch(addBucketVersioning(true));
-                    }
-                  }}
-                  label={"Object Locking"}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormSwitchWrapper
-                  value="bucket_quota"
-                  id="bucket_quota"
-                  name="bucket_quota"
-                  checked={quotaEnabled}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    dispatch(addBucketQuota(event.target.checked));
-                  }}
-                  label={"Quota"}
-                  disabled={!distributedSetup}
-                />
-              </Grid>
               {quotaEnabled && distributedSetup && (
                 <React.Fragment>
                   <Grid item xs={12}>

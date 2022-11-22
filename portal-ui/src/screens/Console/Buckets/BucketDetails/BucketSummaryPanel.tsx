@@ -424,95 +424,13 @@ const BucketSummary = ({ classes, match }: IBucketSummaryProps) => {
           <Grid item xs={12}>
             <Box sx={{ ...twoColCssGridLayoutConfig }}>
               <Box sx={{ ...twoColCssGridLayoutConfig }}>
-                <SecureComponent
-                  scopes={[IAM_SCOPES.S3_GET_BUCKET_POLICY]}
-                  resource={bucketName}
-                >
-                  <EditablePropertyItem
-                    iamScopes={[IAM_SCOPES.S3_PUT_BUCKET_POLICY]}
-                    resourceName={bucketName}
-                    property={"Access Policy:"}
-                    value={accessPolicy.toLowerCase()}
-                    onEdit={() => {
-                      setAccessPolicyScreenOpen(true);
-                    }}
-                    isLoading={bucketLoading}
-                  />
-                </SecureComponent>
 
-                <SecureComponent
-                  scopes={[IAM_SCOPES.S3_GET_BUCKET_ENCRYPTION_CONFIGURATION]}
-                  resource={bucketName}
-                >
-                  <EditablePropertyItem
-                    iamScopes={[
-                      IAM_SCOPES.S3_PUT_BUCKET_ENCRYPTION_CONFIGURATION,
-                    ]}
-                    resourceName={bucketName}
-                    property={"Encryption:"}
-                    value={encryptionEnabled ? "Enabled" : "Disabled"}
-                    onEdit={() => {
-                      setEnableEncryptionScreenOpen(true);
-                    }}
-                    isLoading={loadingEncryption}
-                  />
-                </SecureComponent>
-
-                <SecureComponent
-                  scopes={[IAM_SCOPES.S3_GET_REPLICATION_CONFIGURATION]}
-                  resource={bucketName}
-                >
-                  <LabelValuePair
-                    label={"Replication:"}
-                    value={
-                      <LabelWithIcon
-                        icon={
-                          replicationRules ? <EnabledIcon /> : <DisabledIcon />
-                        }
-                        label={
-                          <label className={classes.textMuted}>
-                            {replicationRules ? "Enabled" : "Disabled"}
-                          </label>
-                        }
-                      />
-                    }
-                  />
-                </SecureComponent>
-
-                <SecureComponent
-                  scopes={[IAM_SCOPES.S3_GET_BUCKET_OBJECT_LOCK_CONFIGURATION]}
-                  resource={bucketName}
-                >
-                  <LabelValuePair
-                    label={"Object Locking:"}
-                    value={
-                      <LabelWithIcon
-                        icon={
-                          hasObjectLocking ? <EnabledIcon /> : <DisabledIcon />
-                        }
-                        label={
-                          <label className={classes.textMuted}>
-                            {hasObjectLocking ? "Enabled" : "Disabled"}
-                          </label>
-                        }
-                      />
-                    }
-                  />
-                </SecureComponent>
                 <Box className={classes.spacerTop}>
                   <LabelValuePair
                     label={"Tags:"}
                     value={<BucketTags bucketName={bucketName} />}
                   />
                 </Box>
-                <EditablePropertyItem
-                  iamScopes={[IAM_SCOPES.ADMIN_SET_BUCKET_QUOTA]}
-                  resourceName={bucketName}
-                  property={"Quota:"}
-                  value={quotaEnabled ? "Enabled" : "Disabled"}
-                  onEdit={setBucketQuota}
-                  isLoading={loadingQuota}
-                />
               </Box>
 
               <Box
