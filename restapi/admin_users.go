@@ -35,7 +35,6 @@ import (
 	userApi "github.com/minio/console/restapi/operations/user"
 	"github.com/minio/madmin-go"
 	iampolicy "github.com/minio/pkg/iam/policy"
-	"github.com/minio/console/pkg/logger"
 )
 
 // Policy evaluated constants
@@ -764,7 +763,6 @@ func getUserDetailResponse(session *models.Principal, params userApi.GetUserDeta
 	ctx, cancel := context.WithCancel(params.HTTPRequest.Context())
 	defer cancel()
 
-	logger.Info("call get user detail for httpd")
 	mAdmin, err := NewMinioAdminClient(session)
 	if err != nil {
 		return nil, ErrorWithContext(ctx, err)
@@ -787,7 +785,6 @@ func getUserDetailResponse(session *models.Principal, params userApi.GetUserDeta
 		return nil, ErrorWithContext(ctx, err)
 	}
 
-	logger.Info("result %v", userd)
 	userDetail := &models.UserDetail {
 		AccessKey: userName,
 		CanonicalID: userd.CanonicalID,
